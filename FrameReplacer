@@ -1,3 +1,12 @@
+##################################################################################################################
+#  As it took me hours of reading                                                                                #
+#  - age old official docs https://documents.blackmagicdesign.com/UserManuals/Fusion8_Scripting_Guide.pdf        #
+#  - more recent unofficial docs https://emberlightvfx.github.io/Fusion-Script-Docs/#/                           #
+#  - as well as the README that comes with resolve studio                                                        #
+#  - and a bunch of chatgpt (who hallucinated API methods like crazy)                                            #
+#  i decided to put my learnings on here, in case anyone googles for something similar                           #
+##################################################################################################################
+
 import DaVinciResolveScript as dvr
 
 # Connect to DaVinci Resolve
