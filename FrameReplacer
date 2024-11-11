@@ -1,0 +1,54 @@
+import DaVinciResolveScript as dvr
+
+# Connect to DaVinci Resolve
+resolve = dvr.scriptapp("Resolve")
+project_manager = resolve.GetProjectManager()
+project = project_manager.GetCurrentProject()
+timeline = project.GetCurrentTimeline()
+
+# TODO access clip properly
+clip_index = 1
+clip = timeline.GetItemListInTrack("video", clip_index)[0]
+clip_duration = clip.GetDuration()
+
+# Check for an existing Fusion composition or create a new one
+if not clip.GetFusionCompCount():
+    fusion_comp = clip.AddFusionComp()
+else:
+    fusion_comp = clip.GetFusionCompByIndex(1)
+
+# List all available Fusion tools
+print("Available Fusion Tools:")
+available_tools = fusion_comp.GetToolList()
+for tool_id, tool in available_tools.items():
+    print(f"Tool ID: {tool_id}, Tool Name: {tool.GetAttrs()['TOOLS_Name']}")
+    if tool.GetAttrs()['TOOLS_Name'] == 'FrameReplacer1':
+        print(tool.GetAttrs())
+        frame_replacer = tool
+
+# List all available inputs
+for idx, input_obj in frame_replacer.GetInputList().items():
+    i_name = input_obj.GetAttrs().get('INPS_Name')
+    print(f"Input index: {idx}, Name: {i_name}, Type: {input_obj.GetAttrs().get('INPS_DataType')}")  
+
+if frame_replacer:
+    # Set the initial frame to replace each 4th frame
+    #frame_replacer.Input["Frame"].SetValue(replace_frame_number)  # Set the frame to replace with
+    
+    # Iterate over every 4th frame and set "Replace This Frame" to enable replacement
+    for frame in range(0, clip_duration-2, 2):
+        timecode = clip.GetStart() + frame
+        timeline.SetCurrentTimecode(timecode)
+        print(timecode)
+        # Enable "Replace This Frame" at this timecode
+        #frame_replacer.SetInput("isReplaceFrame", 1, frame)
+        #frame_replacer.SetInput("isReplaceFrame",SetValue(1)  # 1 to enable; 0 to disable
+        frame_replacer.isReplaceFrame[frame] = 1
+        frame_replacer.isReplaceFrame[frame+1] = 0
+        #frame_replacer.isReplaceFrame[frame+2] = 0
+        #frame_replacer.isReplaceFrame[frame+3] = 0
+
+    print("Frame replacement setup complete on every 4th frame.")
+else:
+    print("Failed to find the Frame Replacer tool in the Fusion composition.")
+
