@@ -35,14 +35,14 @@ for tool_id, tool in available_tools.items():
         print(tool.GetAttrs())
         frame_replacer = tool
 
-# List all available inputs
-for idx, input_obj in frame_replacer.GetInputList().items():
-    i_name = input_obj.GetAttrs().get('INPS_Name')
-    print(f"Input index: {idx}, Name: {i_name}, Type: {input_obj.GetAttrs().get('INPS_DataType')}")  
-
 if frame_replacer:
-    # Set the initial frame to replace each 4th frame
-    #frame_replacer.Input["Frame"].SetValue(replace_frame_number)  # Set the frame to replace with
+    # List all available inputs
+    for idx, input_obj in frame_replacer.GetInputList().items():
+        i_name = input_obj.GetAttrs().get('INPS_Name')
+        print(f"Input index: {idx}, Name: {i_name}, Type: {input_obj.GetAttrs().get('INPS_DataType')}")  
+    
+        # Set the initial frame to replace each 4th frame
+        #frame_replacer.Input["Frame"].SetValue(replace_frame_number)  # Set the frame to replace with
     
     # Iterate over every 4th frame and set "Replace This Frame" to enable replacement
     for frame in range(0, clip_duration-2, 2):
